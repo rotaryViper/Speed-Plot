@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Speed Epicycles</title>
+        <!--An attempt at SEO optimisations-->
+        <meta name="author" content="Rotary Viper">
+        <meta name="description" content="Draw outlines of any image.">
+        <meta name="keywords" content="JMSS, Mathematica, Drawing, Epicycles">
+        <meta name="referrer" content="no-referrer">
+
+        <!--Website settings-->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width">
+        <!--This works?-->
+        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚲</text></svg>">
+        
+        <!--Preload fonts first-->
+        <link
+            rel="preload"
+            as="font"
+            href="https://fonts.gstatic.com/s/nunito/v24/XRXI3I6Li01BKofiOc5wtlZ2di8HDLshdTQ3jw.woff2"
+            type="font/woff2"
+            crossorigin="anonymous"
+        >
+        <link
+            rel="preload"
+            as="font"
+            href="https://fonts.gstatic.com/s/opensans/v29/memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgsjZ0B4gaVI.woff2"
+            type="font/woff2"
+            crossorigin="anonymous"
+        >
+
+        <!--
+        https://fonts.gstatic.com/s/nunito/v24/XRXI3I6Li01BKofiOc5wtlZ2di8HDLshdTQ3jw.woff2
+        https://fonts.gstatic.com/s/opensans/v29/memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgsjZ0B4gaVI.woff2
+        https://fonts.googleapis.com/css2?family=Nunito&family=Open+Sans
+
+        target="_blank" rel="noopener noreferrer" this line is used to safely open links in new tabs
+        -->
+
+        <!--Then load font css file-->
+        <link rel="preload" as="style" href="../constant.css">
+        <link rel="stylesheet" href="../constant.css">
+        <link rel="stylesheet" href="index.css">
+
+    </head>
+    <body>
+        <!--Title-->
+        <a class="title">
+            Speed Epicycles
+        </a>
+
+        <!--Introduction-->
+        <div class="subtitle">
+            Draw outlines of any image
+        </div>
+
+        <!--Credits-->
+        <a class="credit" href="https://github.com/rotaryViper" target="_blank" rel="noopener noreferrer">
+            By Rotary Viper
+        </a>
+
+        <!--Home-->
+        <a class="home" href="../index.html">
+            <img
+                src=../home.svg
+                alt="Home Button"
+                decoding=async
+                loading=lazy
+                class="home"
+            >
+        </a>
+        <hr>
+        <span class="flexBox">
+            <c class="sect">
+                <c class="secttitle">
+                    Draw cool outlines
+                </c>
+                <c class="invis">
+                    spdEpicyclePlay[img, Optional(colour)]
+                </c>
+            </c>
+
+            <c class="sect">
+                <c class="secttitle">
+                    Save the outline as a gif with:
+                </c>
+                <c class="invis">
+                    spdEpicycleGIF[img, Optional(colour)]
+                </c>
+            </c>
+        </span>
+        <img
+                src=monke.gif
+                alt="Monkey Outline"
+                decoding=async
+                loading=lazy
+                class="bigpicture"
+            >
+    </body>
+</html>

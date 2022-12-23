@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Speed Plot</title>
+        <!--An attempt at SEO optimisations-->
+        <meta name="author" content="Rotary Viper">
+        <meta name="description" content="Happy Plotting :D">
+        <meta name="keywords" content="JMSS, Mathematica, Plotting">
+        <meta name="referrer" content="no-referrer">
+
+        <!--Website settings-->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width">
+        <!--This works?-->
+        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📈</text></svg>">
+        
+        <!--Preload fonts first-->
+        <link
+            rel="preload"
+            as="font"
+            href="https://fonts.gstatic.com/s/nunito/v24/XRXI3I6Li01BKofiOc5wtlZ2di8HDLshdTQ3jw.woff2"
+            type="font/woff2"
+            crossorigin="anonymous"
+        >
+        <link
+            rel="preload"
+            as="font"
+            href="https://fonts.gstatic.com/s/opensans/v29/memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgsjZ0B4gaVI.woff2"
+            type="font/woff2"
+            crossorigin="anonymous"
+        >
+
+        <!--
+        https://fonts.gstatic.com/s/nunito/v24/XRXI3I6Li01BKofiOc5wtlZ2di8HDLshdTQ3jw.woff2
+        https://fonts.gstatic.com/s/opensans/v29/memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgsjZ0B4gaVI.woff2
+        https://fonts.googleapis.com/css2?family=Nunito&family=Open+Sans
+
+        target="_blank" rel="noopener noreferrer" this line is used to safely open links in new tabs
+        -->
+
+        <!--Then load font css file-->
+        <link rel="preload" as="style" href="../constant.css">
+        <link rel="stylesheet" href="../constant.css">
+        <link rel="stylesheet" href="index.css">
+
+    </head>
+    <body>
+        <!--Title-->
+        <a class="title" href="https://github.com/rotaryViper/Speed-Plot" target="_blank" rel="noopener noreferrer">
+            Speed Plot
+        </a>
+
+        <!--Introduction-->
+        <div class="subtitle">
+            Happy Plotting :D
+        </div>
+
+        <!--Credits-->
+        <a class="credit" href="https://github.com/rotaryViper" target="_blank" rel="noopener noreferrer">
+            By Rotary Viper
+        </a>
+
+        <!--Home-->
+        <a class="home" href="../index.html">
+            <img
+                src=../home.svg
+                alt="Home Button"
+                decoding=async
+                loading=lazy
+                class="home"
+            >
+        </a>
+        <hr>
+        <img
+            src=spdPlot.svg
+            alt="Speed Plot Graphic"
+            decoding=async
+            loading=lazy
+            class="bigpicture"
+        >
+
+        <span class="flexBox">
+            <c class="sect">
+                <c class="secttitle">
+                    Hover Over It!
+                </c>
+                <c class="invis">
+                    Hover over any point, line or function for more information.<br>📲
+                </c>
+            </c>
+            <c class="sect">
+                <c class="secttitle">
+                    Click It!
+                </c>
+                <c class="invis">
+                    Click any hovered part to print it.<br>Click on tickboxes to toggle them.<br>Click on text boxes to edit them.<br>👆
+                </c>
+            </c>
+            <c class="sect">
+                <c class="secttitle">
+                    Drag It!
+                </c>
+                <c class="invis">
+                    Drag the graph to change the domain and range.<br>Just like Desmos!<br>🖱️
+                </c>
+            </c>
+            <c class="sect">
+                <c class="secttitle">
+                    Type On It!
+                </c>
+                <c class="invis">
+                    Type on any text box, then click Enter to confirm its value.<br>✅
+                </c>
+            </c>
+            <c class="sect">
+                <c class="secttitle">
+                    100% Compatibility with Plot
+                </c>
+                <c class="invis">
+                    Feel at home with familiar syntax.<br>Speed Plot is typed in the exact same way as Plot. Nothing to memorise.<br>It even works with Manipulate. Make sure Manipulate SaveDefinition->True if you want Manipulate to remember spdPlot.<br>💯
+                </c>
+            </c>
+            <c class="sect">
+                <c class="secttitle">
+                    100% Independent
+                </c>
+                <c class="invis">
+                    Every Speed Plot is a self-contained function that can run itself without the functions existing on the host computer.<br>💾
+                </c>
+            </c>
+            <c class="sect">
+                <c class="secttitle">
+                    100% Free
+                </c>
+                <c class="invis">
+                    You are the new owner of Speed Plot!<br>Do whatever you want with it.<br>🆓
+                </c>
+            </c>
+            <c class="sect">
+                <c class="secttitle">
+                    100% Customizable
+                </c>
+                <c class="invis">
+                    Mix & Match with the 10 options provided at the top of the source code for a different feeling Speed Plot.<br>🔄
+                </c>
+            </c>
+            <c class="sect">
+                <c class="secttitle">
+                    Its Lazy
+                </c>
+                <c class="invis">
+                    Calculates the numbers YOU want.<br>So you get the RESULTS you want FIRST, instead of calculating everything you DON'T need.<br>💤
+                </c>
+            </c>
+            <c class="sect">
+                <c class="secttitle">
+                    Wouldn't crash your computer
+                </c>
+                <c class="invis">
+                    Everything is async, so it will never freeze mathematica.<br>It runs on an a laptop that is slower than school laptops used in methods 3&4 SACs.<br>❌🛑
+                </c>
+            </c>
+        </span>
+        <hr>
+        <c class="subtitle">
+            Try different levels of Speed Plot
+        </c>
+        <span class="flexBox">
+            <c class="sect">
+                <c class="secttitle">
+                    spdPlot
+                </c>
+                <c class="invis">
+                    THE PLOT FUNCTION.<br>
+                    Recommended from Methods 1&2 onwards.<br>
+                    🚀
+                </c>
+            </c>
+            <c class="sect">
+                <c class="secttitle">
+                    spdPlotCore
+                </c>
+                <c class="invis">
+                    spdPlotDraggable with:<br>
+                    X & Y Intercepts<br>
+                    Horizontal & Vertical Asymptotes<br>
+                    Points of intersection<br>
+                    Turning points<br><br>
+                    This covers most of core math.<br>
+                    🚁
+                </c>
+            </c>
+            <c class="sect">
+                <c class="secttitle">
+                    spdPlot<br>Draggable
+                </c>
+                <c class="invis">
+                    spdPlotFast that can be dragged around.<br>🚄
+                </c>
+            </c>
+            <c class="sect">
+                <c class="secttitle">
+                    spdPlotFast
+                </c>
+                <c class="invis">
+                    spdPlotFaster that gives functions with their domain and range.<br>🚈
+                </c>
+            </c>
+            <c class="sect">
+                <c class="secttitle">
+                    spdPlotFaster
+                </c>
+                <c class="invis">
+                    Reskin of Plot.<br>🚌
+                </c>
+            </c>
+        </span>
+        </a>
+    </body>
+</html>

@@ -1,0 +1,27 @@
+.logo{
+    width:18rem;
+    height:auto;
+    position:absolute;
+}
+
+.sect{color:black}
+
+.sect:nth-child(1){
+    background-color:goldenrod;
+}
+
+.sect:nth-child(2){
+    background-color:plum;
+}
+
+.sect:nth-child(3){
+    background-color:lightcyan;
+}
+
+.sect:nth-child(4){
+    background-color:lightgreen;
+}
+
+.sect:nth-child(5){
+    background-color:lightgray;
+}

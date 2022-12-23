@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Speed Formula</title>
+        <!--An attempt at SEO optimisations-->
+        <meta name="author" content="Rotary Viper">
+        <meta name="description" content="Find the equation with any formula and point.">
+        <meta name="keywords" content="JMSS, Mathematica, Formula, Solve">
+        <meta name="referrer" content="no-referrer">
+
+        <!--Website settings-->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width">
+        <!--This works?-->
+        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧪</text></svg>">
+        
+        <!--Preload fonts first-->
+        <link
+            rel="preload"
+            as="font"
+            href="https://fonts.gstatic.com/s/nunito/v24/XRXI3I6Li01BKofiOc5wtlZ2di8HDLshdTQ3jw.woff2"
+            type="font/woff2"
+            crossorigin="anonymous"
+        >
+        <link
+            rel="preload"
+            as="font"
+            href="https://fonts.gstatic.com/s/opensans/v29/memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgsjZ0B4gaVI.woff2"
+            type="font/woff2"
+            crossorigin="anonymous"
+        >
+
+        <!--
+        https://fonts.gstatic.com/s/nunito/v24/XRXI3I6Li01BKofiOc5wtlZ2di8HDLshdTQ3jw.woff2
+        https://fonts.gstatic.com/s/opensans/v29/memSYaGs126MiZpBA-UvWbX2vVnXBbObj2OVZyOOSr4dVJWUgsjZ0B4gaVI.woff2
+        https://fonts.googleapis.com/css2?family=Nunito&family=Open+Sans
+
+        target="_blank" rel="noopener noreferrer" this line is used to safely open links in new tabs
+        -->
+
+        <!--Then load font css file-->
+        <link rel="preload" as="style" href="../constant.css">
+        <link rel="stylesheet" href="../constant.css">
+        <link rel="stylesheet" href="index.css">
+
+    </head>
+    <body>
+        <!--Title-->
+        <a class="title">
+            Speed Formula
+        </a>
+
+        <!--Introduction-->
+        <div class="subtitle">
+            Find the equation with any formula and point
+        </div>
+
+        <!--Credits-->
+        <a class="credit" href="https://github.com/rotaryViper" target="_blank" rel="noopener noreferrer">
+            By Rotary Viper
+        </a>
+
+        <!--Home-->
+        <a class="home" href="../index.html">
+            <img
+                src=../home.svg
+                alt="Home Button"
+                decoding=async
+                loading=lazy
+                class="home"
+            >
+        </a>
+        <hr>
+        <span class="flexBox">
+            <c class="sect">
+                <c class="secttitle">
+                    Find any equation with points
+                </c>
+                <c class="invis">
+                    spdFormula[formula, points]<br><br>Useful for easier questions
+                </c>
+            </c>
+
+            <c class="sect">
+                <c class="secttitle">
+                    Find any equation with mathematica syntax
+                </c>
+                <c class="invis">
+                    spdFormula2[formula, {7==3x...}]<br><br>Useful for harder questions
+                </c>
+            </c>
+        </span>
+    </body>
+</html>
