@@ -1,9 +1,5 @@
 (* ::Package:: *)
 
-BeginPackage["spd`"];
-Unprotect @@ Names["spd`*"];
-ClearAll @@ Names["spd`*"];
-ClearAll @@ Names["spd`Private`*"];
 ClearAll @@ ToExpression@Evaluate@Select[Names["Global`*"],StringContainsQ[#,"spd"]&];
 
 
@@ -235,7 +231,7 @@ spdPlotRange=Automatic;(*Just like a persistent PlotRange*)
 spdDragSens=.003;
 
 spdPlotFaster[equ_,dom:{_,_?NumericQ,_?NumericQ}:{x,-10,10},plotOptions:OptionsPattern[]]:=
-Plot[Evaluate@Flatten@{equ},dom,Evaluate@FilterRules[{plotOptions},Options@Plot],Background->spdColourPlot,AspectRatio->1,PlotLegends->"Expressions",ImageSize->spdPlotSize,PlotLabel->spd`spdStyle[spdMessage]];
+Plot[Evaluate@Flatten@{equ},dom,Evaluate@FilterRules[{plotOptions},Options@Plot],Background->spdColourPlot,AspectRatio->1,PlotLegends->"Expressions",ImageSize->spdPlotSize,PlotLabel->spdStyle[spdMessage]];
 
 (*-------------------------Processing-------------------------
 Enter any formula, points then get the graph
@@ -244,10 +240,10 @@ List of formulas*)
 spdLinear=a x+b;spdQuad=a x^2+b x+c;spdCubic=a x^3+b x^2+c x+d;spdQuartic=a x^4+b x^3+c x^2+d x+e;
 
 spdEpicyclePlay[img_,colour_:Automatic]:=
-Module[{a=spd`Private`spdEpicycleCore[img,colour]},(*spdEpicyclePlay[img,colour]=*)ListAnimate[Flatten@{a,Table[a[[-1]],20],Reverse@a},60]
+Module[{a=spdEpicycleCore[img,colour]},(*spdEpicyclePlay[img,colour]=*)ListAnimate[Flatten@{a,Table[a[[-1]],20],Reverse@a},60]
 ];
 spdEpicycleGIF[img_,colour_:Automatic]:=
-Module[{a=spd`Private`spdEpicycleCore[img,colour]},(*spdEpicycleGIF[img,colour]=*)Export["epicycle.gif",Flatten@{a,Table[a[[-1]],20],Reverse@a},"DisplayDurations" ->1/60]
+Module[{a=spdEpicycleCore[img,colour]},(*spdEpicycleGIF[img,colour]=*)Export["epicycle.gif",Flatten@{a,Table[a[[-1]],20],Reverse@a},"DisplayDurations" ->1/60]
 ];
 
 
@@ -305,9 +301,6 @@ With[
 			]
 		]
 ];
-
-
-Begin["`Private`"];
 
 
 (*-------------------------StartUp quality of life things-------------------------*)
@@ -672,14 +665,14 @@ spdAsyO[equ_,dom_:x]:=
 		},
 		{
 			result=
-			spd`Private`spdEquPlotG[
+			spdEquPlotG[
 				(*Remove all the wrong asymptotes, non-asymptotes, duplicates*)
 				DeleteCases[
 					Complement[
 						DeleteDuplicates@Flatten@
 						{
 							(*Just find the other asymptotes*)
-							Map[spd`Private`$Noty/.#&,Flatten@Map[ResourceFunction["Asymptotes"][Unevaluated@equ,dom,$Noty,#]&,{"Oblique","Parabolic","Other"}]],
+							Map[$Noty/.#&,Flatten@Map[ResourceFunction["Asymptotes"][Unevaluated@equ,dom,$Noty,#]&,{"Oblique","Parabolic","Other"}]],
 							(*Thank you for staying quiet*)
 							Quiet@PolynomialQuotient[Numerator[Together@equ],Denominator[Together@equ],dom]
 						},
@@ -997,9 +990,9 @@ spdEquPlotG[equ_,message_:"Equation",message2_:"",dom_:x]:=
 {
 If[Flatten@{equ}=={},
 (*If equation is empty, make it return nothing*)
-spd`Private`spdEquPlotG[Unevaluated@equ,message,dom]={},
+{},
 
-spd`Private`spdEquPlotG[Unevaluated@equ,message,dom]=
+
 (*Simple error checking*)
 With[{equString=spdStyle[Column@{message,Extract[Hold@equ,1,Defer],message2,TableForm@{Column@{"Domain",spdErrorChecker@Unevaluated@Simplify@FunctionDomain[equ,dom,Reals]},Column@{"Range",spdErrorChecker@Unevaluated@Simplify@FunctionRange[equ,dom,Global`y,Reals]}}/.Dispatch[True->Reals]}]},
 EventHandler[Tooltip[Evaluate@equ,equString//spdForm//ReleaseHold],
@@ -1012,8 +1005,7 @@ spdEquPlotGInverse[equ_,message_:"Equation",message2_:"",dom_:x]:=
 {
 If[Flatten@{equ}=={},
 (*If equation is empty, make it return nothing*)
-spd`Private`spdEquPlotGInverse[Unevaluated@equ,message,dom]={},
-spd`Private`spdEquPlotGInverse[Unevaluated@equ,message,dom]=
+{},
 (*Simple error checking*)                           (*I hate this extract code but it works so well*)
 With[{equString=spdStyle[Column@{message,message2,Extract[Hold@equ,1,Defer],TableForm@{Column@{"Domain",spdErrorChecker@Unevaluated@FunctionRange[equ,dom,Global`y,Reals]},Column@{"Range",spdErrorChecker@Unevaluated@FunctionDomain[equ,dom,Reals]}}/.Dispatch[True->Reals]}]},
 EventHandler[Tooltip[{Evaluate@equ,dom},equString//spdForm],
@@ -1034,34 +1026,13 @@ $i don't care too much about commenting this but It Just Works*)
 (*Table[spdEquPlotG[Flatten[{equ}][[$i]]],{$i,Length@Flatten@{equ}}]*)
 spdPlotFast[equ_,dom:{_,_?NumericQ,_?NumericQ}:{x,-10,10},plotOptions:OptionsPattern[]]:=
 Dynamic[
-spdPlotFaster[Evaluate[spd`Private`spdEquPlotG[equ]], dom,
+spdPlotFaster[Evaluate[spdEquPlotG[equ]], dom,
 plotOptions
 ],
 SynchronousUpdating->False,
 TrackedSymbols:>{equ},
 CachedValue->Once@ToBoxes[spdPlotFaster[equ,dom,plotOptions]]
 ];
-
-
-spd`Private`spdPlotDraggable[equ_,dom:{_,_?NumericQ,_?NumericQ}:{x,-10,10},plotOptions:OptionsPattern[]]:=
-DynamicModule[{initPos,finalPos,domLow=dom[[2]],domHigh=dom[[3]],rangeLow,rangeHigh,idomLow,idomHigh,irangeLow,irangeHigh},
-{rangeLow,rangeHigh}=spd`Private`spdPlotInitRange[equ,dom,plotOptions];
-EventHandler[
-Dynamic[spdPlotFast[equ,{dom[[1]],domLow,domHigh},PlotRange->{rangeLow,rangeHigh},plotOptions],SynchronousUpdating->False,TrackedSymbols:>{domLow},CachedValue->Once@ToBoxes[spd`spdPlotFaster[equ,dom,plotOptions]]],
-{"MouseDown":>({initPos=MousePosition[],idomLow=domLow,idomHigh=domHigh,irangeLow=rangeLow,irangeHigh=rangeHigh}),"MouseDragged":>({finalPos=MousePosition[],domLow=spdDragSens(idomHigh-idomLow)(initPos[[1]]-finalPos[[1]])+idomLow,domHigh=spdDragSens(idomHigh-idomLow)(initPos[[1]]-finalPos[[1]])+idomHigh,rangeLow=spdDragSens(irangeHigh-irangeLow)(-initPos[[2]]+finalPos[[2]])+irangeLow,rangeHigh=spdDragSens(irangeHigh-irangeLow)(-initPos[[2]]+finalPos[[2]])+irangeHigh})}
-]];
-
-spdPlotIntegrate[equ_,dom:{_,_?NumericQ,_?NumericQ}:{x,-10,10},plotOptions:OptionsPattern[]]:={
-Module[{
-equList=Flatten@{equ},
-equListI,
-result
-},{
-equListI=Simplify@Map[Integrate[#,dom[[1]]]&,equList];
-result=Plot[Evaluate@Table[spd`Private`spdEquPlotG[Evaluate@equListI[[$i]],"Integral",Column@{"Original Equation",equList[[$i]]/.Unevaluated->Defer},dom[[1]]],{$i,Length[equList]}],dom,Prolog->{},Evaluate@FilterRules[{plotOptions},Options@spdPlot],PlotStyle->Dashed,Evaluate@spd`Private`spdAltPlotLabel["Integral",Length[equList]]];
-Return[result,spdPlotIntegrate]
-}]
-};
 
 
 spdPlotDerivative[equ_,dom:{_,_?NumericQ,_?NumericQ}:{x,-10,10},plotOptions:OptionsPattern[]]:={
@@ -1072,7 +1043,7 @@ equListD,
 result
 },{
 equListD=Simplify@Map[D[#,dom[[1]]]&,equList];
-result=Plot[Evaluate@Table[spd`Private`spdEquPlotG[Evaluate@equListD[[$i]],"Derivative",Column@{"Original Equation",equList[[$i]]/.Unevaluated->Defer},dom[[1]]],{$i,Length[equList]}],dom,Prolog->{},Evaluate@FilterRules[{plotOptions},Options@spdPlot],PlotStyle->Dashed,Evaluate@spd`Private`spdAltPlotLabel["Derivative",Length[equList]]];
+result=Plot[Evaluate@Table[spdEquPlotG[Evaluate@equListD[[$i]],"Derivative",Column@{"Original Equation",equList[[$i]]/.Unevaluated->Defer},dom[[1]]],{$i,Length[equList]}],dom,Prolog->{},Evaluate@FilterRules[{plotOptions},Options@spdPlot],PlotStyle->Dashed,Evaluate@spdAltPlotLabel["Derivative",Length[equList]]];
 Return[result,spdPlotDerivative]
 }]
 };
@@ -1087,11 +1058,11 @@ result
 },{
 (*
 Print[equList];
-Print@Flatten[Evaluate@Table[spd`Private`spdEquPlotGInverse[equList[[$i]],Column[{"Inverse",Normal@spdInverse[equList[[$i]],dom[[1]]]}],"Original Equation",dom[[1]]],{$i,Length[equList]}],4];
-Print@ParametricPlot[Evaluate@Table[spd`Private`spdEquPlotGInverse[equList[[$i]],Column[{"Inverse",Normal@spdInverse[equList[[$i]],dom[[1]]]}],"Original Equation",dom[[1]]],{$i,Length[equList]}],dom,Prolog->{},Evaluate@FilterRules[{plotOptions},Options@spdPlot],PlotStyle->Dashed,Evaluate@spd`Private`spdAltPlotLabel["Inverse",Length[equList]]];
+Print@Flatten[Evaluate@Table[spdEquPlotGInverse[equList[[$i]],Column[{"Inverse",Normal@spdInverse[equList[[$i]],dom[[1]]]}],"Original Equation",dom[[1]]],{$i,Length[equList]}],4];
+Print@ParametricPlot[Evaluate@Table[spdEquPlotGInverse[equList[[$i]],Column[{"Inverse",Normal@spdInverse[equList[[$i]],dom[[1]]]}],"Original Equation",dom[[1]]],{$i,Length[equList]}],dom,Prolog->{},Evaluate@FilterRules[{plotOptions},Options@spdPlot],PlotStyle->Dashed,Evaluate@spdAltPlotLabel["Inverse",Length[equList]]];
 *)
-result=ParametricPlot[Evaluate@Table[spd`Private`spdEquPlotGInverse[equList[[$i]],Column[{"Inverse",Normal@spdInverse[equList[[$i]],dom[[1]]]}],"Original Equation",dom[[1]]],{$i,Length[equList]}],dom,Prolog->{},Evaluate@FilterRules[{plotOptions},Options@spdPlot],PlotStyle->Dashed,Evaluate@spd`Private`spdAltPlotLabel["Inverse",Length[equList]]];
-(*result=ParametricPlot[Evaluate@Table[Evaluate@spd`Private`spdEquPlotGInverse[equList[[$i]],Column[{"Inverse",Normal@spdInverse[equList[[$i]],dom[[1]]]}],"Original Equation",dom[[1]]],{$i,Length[equList]}],dom,Prolog->{},Evaluate@FilterRules[{plotOptions},Options@spdPlot],PlotStyle->Dashed,Evaluate@spd`Private`spdAltPlotLabel["Inverse",Length[equList]]];*)
+result=ParametricPlot[Evaluate@Table[spdEquPlotGInverse[equList[[$i]],Column[{"Inverse",Normal@spdInverse[equList[[$i]],dom[[1]]]}],"Original Equation",dom[[1]]],{$i,Length[equList]}],dom,Prolog->{},Evaluate@FilterRules[{plotOptions},Options@spdPlot],PlotStyle->Dashed,Evaluate@spdAltPlotLabel["Inverse",Length[equList]]];
+(*result=ParametricPlot[Evaluate@Table[Evaluate@spdEquPlotGInverse[equList[[$i]],Column[{"Inverse",Normal@spdInverse[equList[[$i]],dom[[1]]]}],"Original Equation",dom[[1]]],{$i,Length[equList]}],dom,Prolog->{},Evaluate@FilterRules[{plotOptions},Options@spdPlot],PlotStyle->Dashed,Evaluate@spdAltPlotLabel["Inverse",Length[equList]]];*)
 Return[result,spdPlotInverse]
 }]
 };
@@ -1107,7 +1078,7 @@ If[AllTrue[Flatten@{initRange},NumericQ],{
 ,{
 initRange = (PlotRange/.Options[Plot[Flatten@{equ},dom,PlotRange->spdPlotRange]])[[2]]
 }];
-Return[{Floor@Min[initRange],Ceiling@Max[initRange]},spd`Private`spdPlotInitRange]
+Return[{Floor@Min[initRange],Ceiling@Max[initRange]},spdPlotInitRange]
 }]
 };
 
@@ -1148,7 +1119,7 @@ equList=Evaluate@Table[Extract[equList,{1,i},Unevaluated],{i,Length[equ]}],
 equList={Unevaluated@equ}];
 
 (*Desect any user global functions in equList*)
-equList=spd`Private`spdDesectFunction@equList;
+equList=spdDesectFunction@equList;
 
 (*Parse domain*)
 If[dom[[2]]!=-10&&dom[[3]]!=10,{
@@ -1158,7 +1129,7 @@ idomHigh=domHigh=dom[[3]]
 
 
 (*Round to whole numbers to allow fractions*)
-{rangeLow,rangeHigh}=spd`Private`spdPlotInitRange[equ,{dom[[1]],domLow,domHigh},plotOptions];
+{rangeLow,rangeHigh}=spdPlotInitRange[equ,{dom[[1]],domLow,domHigh},plotOptions];
 irangeLow = rangeLow;
 irangeHigh = rangeHigh;
 
@@ -1166,21 +1137,21 @@ irangeHigh = rangeHigh;
 Calculate the 6 variables below first because they seem more important*)
 findXG=Dynamic[
 If[findXBool,
-spd`Private`spdPointsG[Complement[spdFindX[equList,findXInput,dom[[1]],rangeLow,rangeHigh],{{}}],"Find X",spdColourPoint2]
+spdPointsG[Complement[spdFindX[equList,findXInput,dom[[1]],rangeLow,rangeHigh],{{}}],"Find X",spdColourPoint2]
 ],
 SynchronousUpdating->False,
 TrackedSymbols:>{findXInput,findXBool,rangeLow,rangeHigh}];
 
 findYG=Dynamic[
 If[findYBool,
-spd`Private`spdPointsG[Complement[spdFindY[equList,findYInput,dom[[1]],domLow,domHigh],{{}}],"Find Y",spdColourPoint2]
+spdPointsG[Complement[spdFindY[equList,findYInput,dom[[1]],domLow,domHigh],{{}}],"Find Y",spdColourPoint2]
 ],
 SynchronousUpdating->False,
 TrackedSymbols:>{findYInput,findYBool,domLow,domHigh}];
 
 findGradG=Dynamic[
 If[findGradBool,
-spd`Private`spdPointsG[Complement[spdFindGrad[equList,findGradInput,dom[[1]],domLow,domHigh,rangeLow,rangeHigh],{{}}],"Find Gradient",spdColourPoint1]
+spdPointsG[Complement[spdFindGrad[equList,findGradInput,dom[[1]],domLow,domHigh,rangeLow,rangeHigh],{{}}],"Find Gradient",spdColourPoint1]
 ],
 SynchronousUpdating->False,
 TrackedSymbols:>{findGradInput,findGradBool,domLow,domHigh,rangeLow,rangeHigh}];
@@ -1188,8 +1159,8 @@ TrackedSymbols:>{findGradInput,findGradBool,domLow,domHigh,rangeLow,rangeHigh}];
 findTangentG=Dynamic[
 If[findTangentBool,{
 (*Find the line and then the point, so that the point is on top*)
-spd`Private`spdLinesG[Complement[spdFindTangent[equList,findTangentInput,dom[[1]]],{{}}],spdColourLine],
-spd`Private`spdPointsG[Complement[spdFindX[equList,findTangentInput,dom[[1]],rangeLow,rangeHigh],{{}}],"Find Tangent",spdColourLine]
+spdLinesG[Complement[spdFindTangent[equList,findTangentInput,dom[[1]]],{{}}],spdColourLine],
+spdPointsG[Complement[spdFindX[equList,findTangentInput,dom[[1]],rangeLow,rangeHigh],{{}}],"Find Tangent",spdColourLine]
 }
 ],
 SynchronousUpdating->False,
@@ -1198,8 +1169,8 @@ TrackedSymbols:>{findTangentInput,findTangentBool,rangeLow,rangeHigh}];
 findNormalG=Dynamic[
 If[findNormalBool==True,{
 (*Find the line and then the point, so that the point is on top*)
-spd`Private`spdLinesG[Complement[spdFindNormal[equList,findNormalInput,dom[[1]]],{{}}],spdColourLine],
-spd`Private`spdPointsG[Complement[spdFindX[equList,findNormalInput,dom[[1]],rangeLow,rangeHigh],{{}}],"Find Normal",spdColourLine]
+spdLinesG[Complement[spdFindNormal[equList,findNormalInput,dom[[1]]],{{}}],spdColourLine],
+spdPointsG[Complement[spdFindX[equList,findNormalInput,dom[[1]],rangeLow,rangeHigh],{{}}],"Find Normal",spdColourLine]
 }
 ],
 SynchronousUpdating->False,
@@ -1208,7 +1179,7 @@ TrackedSymbols:>{findNormalInput,findNormalBool,rangeLow,rangeHigh}];
 epG=
 Dynamic[
 	If[epBool,
-		spd`Private`spdPointsG[spdEndPoints[equList,dom[[1]],Rationalize@domLow,Rationalize@domHigh,Rationalize@rangeLow,Rationalize@rangeHigh],"End Point",spdColourPoint3]
+		spdPointsG[spdEndPoints[equList,dom[[1]],Rationalize@domLow,Rationalize@domHigh,Rationalize@rangeLow,Rationalize@rangeHigh],"End Point",spdColourPoint3]
 	],
 	SynchronousUpdating->False,
 	TrackedSymbols:>{epBool,domLow,domHigh,rangeLow,rangeHigh}
@@ -1217,7 +1188,7 @@ Dynamic[
 poiG=
 Dynamic[
 	If[poiBool,
-		spd`Private`spdPointsGPOI[spdPOI[Flatten@{equ},dom[[1]],domLow,domHigh,rangeLow,rangeHigh],"Point of Intersection",spdColourPoint1]
+		spdPointsGPOI[spdPOI[Flatten@{equ},dom[[1]],domLow,domHigh,rangeLow,rangeHigh],"Point of Intersection",spdColourPoint1]
 	],
 	SynchronousUpdating->False,
 	TrackedSymbols:>{poiBool,domLow,domHigh,rangeLow,rangeHigh}
@@ -1243,7 +1214,7 @@ asyG={
 (*Vertical Asymptote Lines*)
 Dynamic[
 	If[asyBool,
-		spd`Private`spdLinesG[asyV[[1]],spdColourLine]
+		spdLinesG[asyV[[1]],spdColourLine]
 	],
 	SynchronousUpdating->False,
 	TrackedSymbols:>{asyV}
@@ -1251,10 +1222,10 @@ Dynamic[
 (*Vertical Asymptote Points*)
 Dynamic[
 	If[asyBool,
-		spd`Private`spdPointsG[
+		spdPointsG[
 			Complement[
 				(*Find all points over all equations*)
-				Flatten[Map[spdFindX[equList,#,dom[[1]],rangeLow,rangeHigh]&,spd`Private`spdAsyParser[asyV[[1]]]],1],
+				Flatten[Map[spdFindX[equList,#,dom[[1]],rangeLow,rangeHigh]&,spdAsyParser[asyV[[1]]]],1],
 			{{}}
 			],
 		"Vertical Asymptote",
@@ -1275,7 +1246,7 @@ Dynamic[
 (*Other Asymptote Points of Intersection*)
 Dynamic[
 	If[asyBool,
-		spd`Private`spdPointsGPOI[
+		spdPointsGPOI[
 			(*Find all asymptote and intersection points of intersection*)
 			Flatten[
 				(*Iterate over all equations*)
@@ -1352,7 +1323,7 @@ Dynamic[
 holeG=
 Dynamic[
 	If[holeBool,
-		spd`Private`spdPointsG[
+		spdPointsG[
 			Complement[
 				spdHoles[equList,dom[[1]]],
 			{{}}
@@ -1375,21 +1346,21 @@ Row@{TableForm[Map[If[Head[#]===List,Row@#,#]&,{
 (*Dynamic@holeG,
 spdHoles[equList,{dom[[1]],domLow,domHigh},PlotRange->{rangeLow,rangeHigh},plotOptions],
 *)"Domain",
-{spd`Private`spdInputField[Dynamic[domLow,SynchronousUpdating->False],Tiny],
-spd`Private`spdInputField[Dynamic[domHigh,SynchronousUpdating->False],Tiny]},
+{spdInputField[Dynamic[domLow,SynchronousUpdating->False],Tiny],
+spdInputField[Dynamic[domHigh,SynchronousUpdating->False],Tiny]},
 "Range",
-{spd`Private`spdInputField[Dynamic[rangeLow,SynchronousUpdating->False],Tiny],
-spd`Private`spdInputField[Dynamic[rangeHigh,SynchronousUpdating->False],Tiny]},
+{spdInputField[Dynamic[rangeLow,SynchronousUpdating->False],Tiny],
+spdInputField[Dynamic[rangeHigh,SynchronousUpdating->False],Tiny]},
 {Checkbox[Dynamic[findXBool,SynchronousUpdating->False]],"Find X"},
-spd`Private`spdInputField[Dynamic[findXInput,SynchronousUpdating->False],Small],
+spdInputField[Dynamic[findXInput,SynchronousUpdating->False],Small],
 {Checkbox[Dynamic[findYBool,SynchronousUpdating->False]],"Find Y"},
-spd`Private`spdInputField[Dynamic[findYInput,SynchronousUpdating->False],Small],
+spdInputField[Dynamic[findYInput,SynchronousUpdating->False],Small],
 {Checkbox[Dynamic[findGradBool,SynchronousUpdating->False]],"Find Gradient"},
-spd`Private`spdInputField[Dynamic[findGradInput,SynchronousUpdating->False],Small],
+spdInputField[Dynamic[findGradInput,SynchronousUpdating->False],Small],
 {Checkbox[Dynamic[findTangentBool,SynchronousUpdating->False]],"Find Tangent at X"},
-spd`Private`spdInputField[Dynamic[findTangentInput,SynchronousUpdating->False],Small],
+spdInputField[Dynamic[findTangentInput,SynchronousUpdating->False],Small],
 {Checkbox[Dynamic[findNormalBool,SynchronousUpdating->False]],"Find Normal at X"},
-spd`Private`spdInputField[Dynamic[findNormalInput,SynchronousUpdating->False],Small],
+spdInputField[Dynamic[findNormalInput,SynchronousUpdating->False],Small],
 (*Checkbox for points of intersection*)
 {Checkbox[Dynamic[poiBool,SynchronousUpdating->False]],"Points of Intersect"},
 {Checkbox[Dynamic[epBool,SynchronousUpdating->False]],"End Points"},
@@ -1443,7 +1414,7 @@ Plz don't process anything here*)
 	}},
 (*Tableform options*)
 	TableDirections->Column,TableSpacing->{0, 0}]
-}[[1]]]
+}[[1]],SaveDefinitions->True]
 }[[1]];
 
 
@@ -1469,7 +1440,7 @@ equList={Unevaluated@equ}
 ];
 
 (*Desect any user global functions in equList*)
-equList=spd`Private`spdDesectFunction@equList;
+equList=spdDesectFunction@equList;
 
 (*Parse domain*)
 If[dom[[2]]!=-10&&dom[[3]]!=10,{
@@ -1479,24 +1450,24 @@ idomHigh=domHigh=dom[[3]]
 
 
 (*Round to whole numbers to allow fractions*)
-{rangeLow,rangeHigh}=spd`Private`spdPlotInitRange[equ,{dom[[1]],domLow,domHigh},plotOptions];
+{rangeLow,rangeHigh}=spdPlotInitRange[equ,{dom[[1]],domLow,domHigh},plotOptions];
 irangeLow = rangeLow;
 irangeHigh = rangeHigh;
 
 
 (*Asymptotes*)
-asyV=Dynamic[spd`Private`spdLinesG[spdAsyV[equList,dom[[1]],domLow,domHigh],spdColourLine],SynchronousUpdating->False,TrackedSymbols:>{domHigh}];
+asyV=Dynamic[spdLinesG[spdAsyV[equList,dom[[1]],domLow,domHigh],spdColourLine],SynchronousUpdating->False,TrackedSymbols:>{domHigh}];
 asyO=Dynamic[spdPlotFaster[spdAsyO[equList,dom[[1]]],{dom[[1]],domLow,domHigh},PlotRange->{rangeLow,rangeHigh},PlotStyle->Dashed],SynchronousUpdating->False,TrackedSymbols:>{domHigh}];
-asyVP=Dynamic[spd`Private`spdPointsG[Complement[Flatten[Map[spdFindX[equList,#,dom[[1]],rangeLow,rangeHigh]&,spd`Private`spdAsyParser@spdAsyV[equList,dom[[1]],domLow,domHigh]],1],{{}}],"Vertical Asymptote",spdColourLine],SynchronousUpdating->False,TrackedSymbols:>{asyV,domHigh}];
-asyOP=Dynamic[spd`Private`spdPointsGPOI[Flatten[Map[spdPOI[Flatten@{Map[{#[[1]][[1]][[1]][[1]][[1]]}&,Complement[spdAsyO[equList,dom[[1]]],{{}}]],#},dom[[1]],domLow,domHigh,rangeLow,rangeHigh]&,equList],1],"Other Asymptote",spdColourLine],SynchronousUpdating->False,TrackedSymbols:>{asyO,domHigh}];
+asyVP=Dynamic[spdPointsG[Complement[Flatten[Map[spdFindX[equList,#,dom[[1]],rangeLow,rangeHigh]&,spdAsyParser@spdAsyV[equList,dom[[1]],domLow,domHigh]],1],{{}}],"Vertical Asymptote",spdColourLine],SynchronousUpdating->False,TrackedSymbols:>{asyV,domHigh}];
+asyOP=Dynamic[spdPointsGPOI[Flatten[Map[spdPOI[Flatten@{Map[{#[[1]][[1]][[1]][[1]][[1]]}&,Complement[spdAsyO[equList,dom[[1]]],{{}}]],#},dom[[1]],domLow,domHigh,rangeLow,rangeHigh]&,equList],1],"Other Asymptote",spdColourLine],SynchronousUpdating->False,TrackedSymbols:>{asyO,domHigh}];
 (*Keeping all points and lines dynamic keeps spdPlotCore small*)
-endpoints=Dynamic[spd`Private`spdPointsG[spdEndPoints[equList,dom[[1]],Rationalize@domLow,Rationalize@domHigh,Rationalize@rangeLow,Rationalize@rangeHigh],"End Point",spdColourPoint3],SynchronousUpdating->False,TrackedSymbols:>{domHigh}];
-holes=Dynamic[spd`Private`spdPointsG[Complement[spdHoles[equList,dom[[1]]],{{}}],"Hole",spdColourPoint4],SynchronousUpdating->False,TrackedSymbols:>{equList}];
-findX=Dynamic[spd`Private`spdPointsG[Complement[spdFindX[equList,0,dom[[1]],rangeLow,rangeHigh],{{}}],"Y Intercept",spdColourPoint2],SynchronousUpdating->False,TrackedSymbols:>{rangeHigh}];
-findY=Dynamic[spd`Private`spdPointsG[Complement[spdFindY[equList,0,dom[[1]],domLow,domHigh],{{}}],"X Intercept",spdColourPoint2],SynchronousUpdating->False,TrackedSymbols:>{domHigh}];
+endpoints=Dynamic[spdPointsG[spdEndPoints[equList,dom[[1]],Rationalize@domLow,Rationalize@domHigh,Rationalize@rangeLow,Rationalize@rangeHigh],"End Point",spdColourPoint3],SynchronousUpdating->False,TrackedSymbols:>{domHigh}];
+holes=Dynamic[spdPointsG[Complement[spdHoles[equList,dom[[1]]],{{}}],"Hole",spdColourPoint4],SynchronousUpdating->False,TrackedSymbols:>{equList}];
+findX=Dynamic[spdPointsG[Complement[spdFindX[equList,0,dom[[1]],rangeLow,rangeHigh],{{}}],"Y Intercept",spdColourPoint2],SynchronousUpdating->False,TrackedSymbols:>{rangeHigh}];
+findY=Dynamic[spdPointsG[Complement[spdFindY[equList,0,dom[[1]],domLow,domHigh],{{}}],"X Intercept",spdColourPoint2],SynchronousUpdating->False,TrackedSymbols:>{domHigh}];
 (*Make gradient slightly more resilient*)
-findGrad=Dynamic[spd`Private`spdPointsG[Complement[spdFindGrad[equList,0,dom[[1]],domLow,domHigh,rangeLow,rangeHigh],{{}}],"Turning Point",spdColourPoint1],SynchronousUpdating->False,TrackedSymbols:>{domHigh}];
-poi=Dynamic[spd`Private`spdPointsGPOI[spdPOI[equList,dom[[1]],domLow,domHigh,rangeLow,rangeHigh],"Point of Intersection",spdColourPoint1],SynchronousUpdating->False,TrackedSymbols:>{domHigh}];
+findGrad=Dynamic[spdPointsG[Complement[spdFindGrad[equList,0,dom[[1]],domLow,domHigh,rangeLow,rangeHigh],{{}}],"Turning Point",spdColourPoint1],SynchronousUpdating->False,TrackedSymbols:>{domHigh}];
+poi=Dynamic[spdPointsGPOI[spdPOI[equList,dom[[1]],domLow,domHigh,rangeLow,rangeHigh],"Point of Intersection",spdColourPoint1],SynchronousUpdating->False,TrackedSymbols:>{domHigh}];
 
 EventHandler[
 Dynamic[Show[
@@ -1523,7 +1494,7 @@ Dynamic[Show[
 	CachedValue->Once@ToBoxes[spdPlotFaster[equ,dom,{PlotRange->{rangeLow,rangeHigh},plotOptions}]]
 	],{"MouseDown":>({initPos=MousePosition[],idomLow=domLow,idomHigh=domHigh,irangeLow=rangeLow,irangeHigh=rangeHigh}),"MouseDragged":>({finalPos=MousePosition[],domLow=spdDragSens(idomHigh-idomLow)(initPos[[1]]-finalPos[[1]])+idomLow,domHigh=spdDragSens(idomHigh-idomLow)(initPos[[1]]-finalPos[[1]])+idomHigh,rangeLow=spdDragSens(irangeHigh-irangeLow)(-initPos[[2]]+finalPos[[2]])+irangeLow,rangeHigh=spdDragSens(irangeHigh-irangeLow)(-initPos[[2]]+finalPos[[2]])+irangeHigh})}
 ](*Must not return*)
-}[[1]]
+}[[1]],SaveDefinitions->True
 ]}[[1]];
 
 
@@ -1566,7 +1537,7 @@ Column@{
 }
 
 (*Return[equListRandom,spdQuestionDerivative]*)
-}[[1]]
+}[[1]],SaveDefinitions->True
 ]
 }[[1]]
 
@@ -1578,18 +1549,15 @@ If[Head@equ===List,
 equList=Evaluate@Table[Extract[equList,{1,i},Unevaluated],{i,Length[equ]}],
 equList={Unevaluated@equ}];
 Return[
-Row@Table[spd`Private`spdQuestionDerivative[equList,dom,range,length,name],row],
+Row@Table[spdQuestionDerivative[equList,dom,range,length,name],row],
 spdQuestionDerivatives]
 }
 ]
 }
 
 
-End[];
-Protect @@ Names["spd`*"];
 (*Unprotect these letters which are protected for some reason*)
 Unprotect[Evaluate@Select[Names["spd`*"],StringLength@#==1&]];
-EndPackage[];
 
 
 (*Initialise resource function asymptote*)
